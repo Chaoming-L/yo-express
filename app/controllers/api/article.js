@@ -26,13 +26,12 @@ router.post('/del_article', async (req, res, next) => {
 })
 
 // 修改文章
-router.post('/upd_article', async (req, res, next) => {
+router.post('/upd_article', async (req, res) => {
     try {
-        const { id, title, text } = req.body
-        const obj = Object.assign({}, { title, text })
-        const result = await Article.findByIdAndUpdate(id, { $set: obj },{
-           new : true
-         })
+        const { id, articleObj } = req.body
+        const result = await Article.findByIdAndUpdate(id,
+            { $set: articleObj },
+            { new: true })
         res.json(result)
     } catch (e) {
         res.json(e)
