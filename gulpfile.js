@@ -12,7 +12,7 @@ gulp.task('less', function () {
     .pipe(livereload());
 });
 
-gulp.task('watch', function() {
+gulp.task('watch', function () {
   gulp.watch('./public/css/*.less', ['less']);
 });
 
@@ -24,7 +24,7 @@ gulp.task('develop', function () {
     stdout: false
   }).on('readable', function () {
     this.stdout.on('data', function (chunk) {
-      if(/^Express server listening on port/.test(chunk)){
+      if (/^Express server listening on port/.test(chunk)) {
         livereload.changed(__dirname);
       }
     });

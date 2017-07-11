@@ -9,7 +9,7 @@ module.exports = function (app) {
 
 router.get('/', async (req, res, next) => {
   var articles = await Article.find()
-  console.log(articles)
+
   res.render('index', {
     title: 'Generator-Express MVC',
     articles: articles
