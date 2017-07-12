@@ -37,7 +37,7 @@ router.post('/record_pv', (req, res) => {
  */
 router.post('/get_pv', async (req, res) => {
     try {
-        const queryString = { month: '$dayOfMonth', week: '$dayofWeek', day: '$hour', hour: '$minute' }
+        const queryString = { month: '$dayOfMonth', week: '$week', day: '$hour', hour: '$minute' }
         const str = req.body.query ? queryString[req.body.query] : queryString['month']
         const result = await Pv.aggregate([
             {

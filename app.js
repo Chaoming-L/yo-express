@@ -3,6 +3,7 @@
 var express = require('express'),
   config = require('./config/config'),
   glob = require('glob'),
+  cors = require('cors'),
   mongoose = require('mongoose');
 
 mongoose.connect(config.db, { useMongoClient: true});
@@ -18,6 +19,8 @@ models.forEach(function (model) {
   require(model);
 });
 var app = express();
+// 允许跨域
+app.use(cors());
 
 module.exports = require('./config/express')(app, config);
 
