@@ -20,7 +20,7 @@ const get_client_ip = function (req) {
     return ip;
 };
 
-router.post('/record_pv', (req, res) => {
+router.get('/record_pv', (req, res) => {
     // 客户端请求Ip
     const ip = get_client_ip(req);
     // 客户端硬件信息
