@@ -25,8 +25,10 @@ router.post('/record_pv', (req, res) => {
     const ip = get_client_ip(req);
     // 客户端硬件信息
     const ua = uaParser(req.headers['user-agent']);
-
-    Pv.create({ ip, ua }, (err, result) => {
+    // 添加格林尼治事件差
+    const date = new Date();
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
+    Pv.create({ ip, ua, add_time: date }, (err, result) => {
         err ? res.send(err) : res.send(result)
     })
 })
@@ -37,8 +39,9 @@ router.post('/record_pv', (req, res) => {
  */
 router.post('/get_pv', async (req, res) => {
     try {
-        const queryString = { month: '$dayOfMonth', week: '$week', day: '$hour', hour: '$minute' }
-        const str = req.body.query ? queryString[req.body.query] : queryString['month']
+        const queryType = req.body.query || 'month'
+        const queryString = { month: '$dayOfMonth', week: '$dayOfWeek', day: '$hour', hour: '$minute' }
+        const str = queryString[queryType]
         const result = await Pv.aggregate([
             {
                 $group: {
@@ -50,9 +53,18 @@ router.post('/get_pv', async (req, res) => {
             },
             { $sort: { "_id": 1 } }
         ]);
-        const date = result.map(x => x._id),
-            count = result.map(x => x.pv),
-            response = { date, count, "code": 0 };
+
+        const week = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+
+        let date = result.map(x => x._id),
+            count = result.map(x => x.pv);
+
+        // 如果查询的是周,那么转换为中文
+        if (queryType === 'week') {
+            date = date.map(x => week[x - 1])
+        }
+
+        const response = { date, count, "code": 0 };
         res.json(response)
     } catch (err) {
         res.send(err)
