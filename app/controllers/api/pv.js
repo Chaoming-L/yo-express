@@ -70,3 +70,23 @@ router.post('/get_pv', async (req, res) => {
         res.send(err)
     }
 })
+
+router.get('/get_os', async (req, res) => {
+    try {
+        const result = await Pv.aggregate([
+            {
+                $group: {
+                    _id: "$ua.os.name",
+                    total: { $sum: 1 },
+                }
+            }
+        ]);
+        let response = {
+            code: 0,
+            data: result
+        }
+        res.json(response)
+    } catch (err) {
+        res.send(err)
+    }
+})
