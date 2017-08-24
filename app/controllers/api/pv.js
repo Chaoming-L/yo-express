@@ -5,7 +5,7 @@ var express = require('express'),
     Pv = mongoose.model('pv');
 
 module.exports = function (app) {
-    app.use('/api', router);
+    app.use('/cao_api', router);
 };
 
 const get_client_ip = function (req) {
